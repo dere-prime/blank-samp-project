@@ -1,0 +1,69 @@
+{
+    "A for loop with operator '!='": 
+    {
+        "prefix": ["for"],
+        "body": ["for(new i = 0; i != $1; i ++) { $2 }"],
+        "description": "A for loop with operator !=."
+    },
+    "A for loop with operator '<'": 
+    {
+        "prefix": ["for"],
+        "body": ["for(new i = 0; i < $1; i ++) { $2 }"],
+        "description": "A for loop with operator <."
+    },
+    "code separator": 
+    {
+        "prefix": ["line"],
+        "body": ["// =================================================================="],
+        "description": "code separator."
+    },
+    "initial code of a module.": 
+    {
+        "prefix": ["module"],
+        "body": 
+        ["/*", "", "   Progress Roleplay", "        $1", "", "*/", "", "#include <YSI_Coding/y_hooks>", ""],
+        "description": "initial code of a module."
+    },
+    "Includes a YSI Library.":
+    {
+        "prefix": ["ysi"],
+        "body": ["#include <YSI_$1/$2>"],
+        "description": "Includes a YSI Library."
+    },
+    "send client message function.":
+    {
+        "prefix": ["scm", "sendclientmessage", "sendplayermessage"],
+        "body": ["SendPlayerClientMessage($1, \"$2\"$3);"],
+        "description": "send client message function."
+    },
+    "create callback.":
+    {
+        "prefix": ["callback", "public", "forward"],
+        "body": ["forward $1($2);", "public $1($2)", "{", "    return 1;", "}"],
+        "description": "create callback."
+    },
+    "player data array.":
+    {
+        "prefix": ["py", "pd", "playerdata"],
+        "body": ["p_($1)"],
+        "description": "player data array."
+    },
+    "player temp array.":
+    {
+        "prefix": ["pt", "playertemp"],
+        "body": ["tmp_($1)"],
+        "description": "player temp array."
+    },
+    "player timer array.":
+    {
+        "prefix": ["pt", "playertimer"],
+        "body": ["ptimer_($1)"],
+        "description": "player timer array."
+    },
+    "easyDialog format":
+    {
+        "prefix": "dialog",
+        "body": "Dialog:$1(playerid, response, listitem, inputtext[])\n{\n    return 1;\n}",
+        "description": "easyDialog format"
+    }
+}

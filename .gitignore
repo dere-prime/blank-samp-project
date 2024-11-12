@@ -1,0 +1,8 @@
+# Samp Server Files
+announce.exe
+samp-npc.exe
+samp-server.exe
+
+# Log files
+server_log.txt
+logs/
