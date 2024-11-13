@@ -80,6 +80,9 @@ const MAX_PLAYERS = 25;
 #define SPAWN_Z 5.0
 #define SPAWN_ANGLE 0.0
 
+/* Entry Point */
+main() {}
+
 /* Header */
 enum e_player_data { /* Enum data style: <initial>name */
     pId,
@@ -120,7 +123,7 @@ ConnectToMainDatabase() {
     handle_db = mysql_connect_file();
 
     if (mysql_errno(handle_db) != 0) {
-        printf("Error al conectar la base de datos (handle_db), Code %d.", mysql_errno(handle_db));
+        printf("Error al conectar la base de datos (handle_db). Codigo de error %d.", mysql_errno(handle_db));
         SendRconCommand("exit");
     } else {
         printf("La base de datos (handle_db) se ha conectado correctamente.");
@@ -159,12 +162,15 @@ SetPlayerLoggedData(const playerid) {
         PlayerTemp[playerid][tLoginTimer] = -1;
     }
 
+    /* Podrias poner algun tipo de carga de datos en este apartado. */
+    //LoadPlayerData(playerid); 
+
     PlayerTemp[playerid][tRegistered] = true;
     PlayerTemp[playerid][tLoggedIn] = true;
 
     TogglePlayerSpectating(playerid, false);
     TogglePlayerControllable(playerid, true);
-
+                                                        /* Podrias poner los datos de posicion aqui */
     SetSpawnInfo(playerid, NO_TEAM, 0 /* Skin Data Array */, SPAWN_X, SPAWN_Y, SPAWN_Z, SPAWN_ANGLE, 0, 0, 0, 0, 0, 0);
     SpawnPlayer(playerid);
     return 1;
@@ -173,16 +179,37 @@ SetPlayerLoggedData(const playerid) {
 public OnPlayerConnect(playerid) {
     ResetPlayerData(playerid);
 
-    /* Clean data */
+    /* Preload Main Data */
     PlayerTemp[playerid][tLoginTimer] = -1;
     PlayerTemp[playerid][tLoginAttemps] = 0;
     PlayerTemp[playerid][tClassed] = false;
     PlayerTemp[playerid][tConnected] = true;
     PlayerTemp[playerid][tSpawned] = false;
 
-    GetPlayerName(playerid, PlayerData[playerid][pName], 24); //Save the player name
+    GetPlayerName(playerid, PlayerData[playerid][pName], 24);
 
     PlayerTemp[playerid][tLoginTimer] = SetTimerEx("OnPlayerLoginTimeOut", LOGIN_TIMER, false, "d", playerid);
+    return 1;
+}
+
+public OnPlayerDisconnect(playerid, reason) {
+    if (PlayerTemp[playerid][tLoginTimer] != -1) {
+        KillTimer(PlayerTemp[playerid][tLoginTimer]);
+        PlayerTemp[playerid][tLoginTimer] = -1;
+    }
+
+    if (PlayerData[playerid][pId] != 0) {
+        if (PlayerTemp[playerid][tRegistered]) {
+            if (PlayerTemp[playerid][tLoggedIn]) {
+                //Podrias poner algun guardado de datos aqui.
+            }
+        }
+    }
+
+    PlayerTemp[playerid][tRegistered] = false;
+    PlayerTemp[playerid][tLoggedIn] = false;
+
+    ResetPlayerData(playerid);
     return 1;
 }
 
@@ -221,10 +248,7 @@ public OnPlayerRequestClass(playerid, classid) {
 }
 
 public OnPlayerRequestSpawn(playerid) { return CallLocalFunction("OnPlayerRequestClass", "dd", playerid, 0); }
-
-public OnPlayerLoginTimeOut(const playerid) {
-    return Kick(playerid);
-}
+public OnPlayerLoginTimeOut(const playerid) { return Kick(playerid); }
 
 public OnPlayerSpawn(playerid) {
     PlayerTemp[playerid][tSpawned] = true;
@@ -273,14 +297,12 @@ Dialog:OnPlayerLoginResponse(playerid, response, listitem, inputtext[]) {
 public OnGameModeInit() {
     AntiDeAMX();
 
-    /* Main db conection */
     ConnectToMainDatabase();
-    
-    /* Spanish description */
-    UsePlayerPedAnims(); //Usar animaciones de el ped.ifp
-    ManualVehicleEngineAndLights(); //Controles manuales para los autos.
-    DisableInteriorEnterExits(); //Deshabilitar interiores por defecto.
-	EnableStuntBonusForAll(false); // Alternar <true : false> bonus por acrobacias.
+
+    UsePlayerPedAnims();
+    ManualVehicleEngineAndLights();
+    DisableInteriorEnterExits();
+	EnableStuntBonusForAll(false);
     return 1;
 }
 
