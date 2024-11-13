@@ -6,3 +6,6 @@ samp-server.exe
 # Log files
 server_log.txt
 logs/
+
+#Compiled Files
+gamemodes/main.amx
